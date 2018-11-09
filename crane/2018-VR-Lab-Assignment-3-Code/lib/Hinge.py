@@ -25,14 +25,18 @@ class Accumulator(avango.script.Script):
     def __init__(self):
         self.super(Accumulator).__init__() # call base-class constructor
 
+    @field_has_changed(sf_rot_input) 
+    def sf_rot_input_changed(self):
+        #print('sf_rot_input changed')
+        pass
 
     ## callback functions
     def evaluate(self):
         # perform update when fields change (with dependency evaluation)
-        print("accum eval")
+        print("accum eval: ", self.sf_rot_input.value)
         
         # ToDo: accumulate rotation input here        
-        # self.sf_mat.value = 
+        self.sf_mat.value = avango.gua.make_rot_mat(self.sf_rot_input.value,0,1,0) * self.sf_mat.value
 
 
 class Constraint(avango.script.Script):
@@ -109,10 +113,12 @@ class Hinge:
         ## sub-classes
         self.acc = Accumulator()
         self.acc.sf_mat.value = self.hinge_node.Transform.value # consider (potential) rotation offset 
+        self.hinge_node.Transform.connect_from(self.acc.sf_mat)
 
         # ToDo: init Constraint here
         # ...
 
         # ToDo: init field connections here
-        # ...
+        if SF_ROT_INPUT is not None:
+            self.acc.sf_rot_input.connect_from(SF_ROT_INPUT)
         

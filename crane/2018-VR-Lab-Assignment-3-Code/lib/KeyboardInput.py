@@ -75,14 +75,16 @@ class KeyboardInput(avango.script.Script):
 
         ## update rot_value0
         if self.keyboardSensor.Button4.value == True: # KEY_LEFT
-            self.sf_rot_input0.value = _rot_input * -1.0
+            self.sf_rot_input0.value += _rot_input * -1.0
 
         elif self.keyboardSensor.Button5.value == True: # KEY_RIGHT
-            self.sf_rot_input0.value = _rot_input
+            self.sf_rot_input0.value += _rot_input
 
         else:
             if self.sf_rot_input0.value != 0.0:
                 self.sf_rot_input0.value = 0.0
+
+        #print('rot input_0 value: ', self.sf_rot_input0.value)
 
         ## update rot_value1
         if self.keyboardSensor.Button6.value == True: # KEY_UP
