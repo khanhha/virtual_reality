@@ -16,7 +16,6 @@ class Hook(avango.script.Script):
     def __init__(self):
         self.super(Hook).__init__()
 
-
     def my_constructor(self,
         PARENT_NODE = None,
         SIZE = 0.1,
@@ -29,7 +28,16 @@ class Hook(avango.script.Script):
 
         
         # ToDo: init scenegraph node(s) here
-        # ...        
+        # ...
+        print('hello khanh')        
+        _loader = avango.gua.nodes.TriMeshLoader() # get trimesh loader to load external tri-meshes
+        self.hook_node = avango.gua.nodes.TransformNode(Name = "hinge{0}_node".format(str(0)))
+        PARENT_NODE.Children.value.append(self.hook_node) 
+
+        self.hook_geometry = _loader.create_geometry_from_file("hook{0}_geometry".format(str(1)), "data/objects/sphere.obj", avango.gua.LoaderFlags.DEFAULTS)
+        self.hook_geometry.Transform.value = avango.gua.make_scale_mat(SIZE, SIZE, SIZE)
+        self.hook_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,1.0,1.0))
+        self.hook_node.Children.value.append(self.hook_geometry )   
 
 
 

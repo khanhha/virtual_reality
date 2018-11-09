@@ -33,7 +33,7 @@ class Accumulator(avango.script.Script):
     ## callback functions
     def evaluate(self):
         # perform update when fields change (with dependency evaluation)
-        print("accum eval: ", self.sf_rot_input.value)
+        # print("accum eval: ", self.sf_rot_input.value)
         
         # ToDo: accumulate rotation input here        
         self.sf_mat.value = avango.gua.make_rot_mat(self.sf_rot_input.value,0,1,0) * self.sf_mat.value
@@ -51,7 +51,7 @@ class Constraint(avango.script.Script):
 
         ## variables
         self.min_angle = -180.0 # in degrees
-        self.max_angle = 180.0 # in degrees
+        self.max_angle =  180.0 # in degrees
 
 
     def set_min_max_values(self, MIN, MAX):
@@ -62,14 +62,20 @@ class Constraint(avango.script.Script):
     ## callback functions
     def evaluate(self):
         # perform update when fields change (with dependency evaluation)
-        print("const eval")
+        # print("const eval")
       
         # check and apply rotation constraints
         _head, _pitch, _roll = lib.Utilities.get_euler_angles(self.sf_mat.value)
+        #print(_head, _pitch, _roll)
+        if _head > self.max_angle:
+            delta = _head - self.max_angle
+        elif _head < self.min_angle:
+            delta = _head - self.min_angle
+        else:
+            delta = 0
 
         # ToDo: apply rotation constraints here        
-        # self.sf_mat.value = 
-
+        self.sf_mat.value = avango.gua.make_rot_mat(-delta, 0, 1, 0) * self.sf_mat.value 
 
 
 class Hinge:
@@ -86,6 +92,8 @@ class Hinge:
         HEIGHT = 0.1, # in meter
         ROT_OFFSET_MAT = avango.gua.make_identity_mat(), # the rotation offset relative to the parent coordinate system
         SF_ROT_INPUT = None,
+        MIN_ANGLE_RANGE = -180.0,
+        MAX_ANGLE_RANGE =  180.0
         ):
 
         ## get unique id for this instance
@@ -115,6 +123,12 @@ class Hinge:
         self.acc.sf_mat.value = self.hinge_node.Transform.value # consider (potential) rotation offset 
         self.hinge_node.Transform.connect_from(self.acc.sf_mat)
 
+        self.constraint = Constraint()
+        self.constraint.set_min_max_values(MIN_ANGLE_RANGE, MAX_ANGLE_RANGE)
+        self.constraint.sf_mat.value = self.hinge_node.Transform.value
+        self.constraint.sf_mat.connect_from(self.hinge_node.Transform)
+        self.hinge_node.Transform.connect_weak_from(self.constraint.sf_mat)
+        
         # ToDo: init Constraint here
         # ...
 

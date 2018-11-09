@@ -37,6 +37,8 @@ class Crane:
             HEIGHT = 0.01,
             ROT_OFFSET_MAT = avango.gua.make_identity_mat(),
             SF_ROT_INPUT = self.input.sf_rot_input0,
+            MIN_ANGLE_RANGE = -180, 
+            MAX_ANGLE_RANGE = 180, 
             )
         
         ## first arm segment
@@ -54,6 +56,8 @@ class Crane:
             HEIGHT = 0.01,
             ROT_OFFSET_MAT = avango.gua.make_rot_mat(30.0,0,0,1) * avango.gua.make_rot_mat(90.0,1,0,0),
             SF_ROT_INPUT = self.input.sf_rot_input1,
+            MIN_ANGLE_RANGE = 0.0,
+            MAX_ANGLE_RANGE = 90.0
             )
 
         self.arm1 = Arm(
@@ -71,6 +75,8 @@ class Crane:
             HEIGHT = 0.01,
             ROT_OFFSET_MAT =  avango.gua.make_rot_mat(70.0,0,0,1) * avango.gua.make_rot_mat(90.0,1,0,0),
             SF_ROT_INPUT = self.input.sf_rot_input2,
+            MIN_ANGLE_RANGE = -90.0,
+            MAX_ANGLE_RANGE =  90.0
             )
 
         self.arm2 = Arm(
@@ -79,3 +85,9 @@ class Crane:
             DIAMETER = 0.01,
             ROT_OFFSET_MAT =  avango.gua.make_rot_mat(-90.0,1,0,0),
             )
+
+        
+        print('khanh', self.arm2.arm_end_node)
+
+        self.hook =  Hook()
+        self.hook.my_constructor(PARENT_NODE = self.arm2.arm_end_node, SIZE = 0.025)
