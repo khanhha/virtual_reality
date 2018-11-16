@@ -22,14 +22,12 @@ class Hook(avango.script.Script):
         TARGET_LIST = [],
         ):
 
-
         ## external references        
         self.TARGET_LIST = TARGET_LIST
-
         
         # ToDo: init scenegraph node(s) here
         # ...
-        print('hello khanh')        
+        #print('hello khanh')        
         _loader = avango.gua.nodes.TriMeshLoader() # get trimesh loader to load external tri-meshes
         self.hook_node = avango.gua.nodes.TransformNode(Name = "hinge{0}_node".format(str(0)))
         PARENT_NODE.Children.value.append(self.hook_node) 
@@ -39,14 +37,14 @@ class Hook(avango.script.Script):
         self.hook_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,1.0,1.0))
         self.hook_node.Children.value.append(self.hook_geometry )   
 
+        self.sf_mat.connect_from(self.hook_node.WorldTransform)
 
-
-    ### callback functions ###
-    
     @field_has_changed(sf_mat)
     def sf_mat_changed(self):
         _pos = self.sf_mat.value.get_translate() # world position of hook
         
+        #print('sf_mat_changed(self)')
+
         for _node in self.TARGET_LIST: # iterate over all target nodes
             _bb = _node.BoundingBox.value # get bounding box of a node
             #print(_node.Name.value, _bb.contains(_pos))

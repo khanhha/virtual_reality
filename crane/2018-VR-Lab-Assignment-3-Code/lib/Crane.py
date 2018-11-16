@@ -20,6 +20,7 @@ class Crane:
         TARGET_LIST = [], # required for bounding box intersection in Hook class 
         ):
         
+        #print(TARGET_LIST)
 
         ## init base node for whole crane
         self.base_node = avango.gua.nodes.TransformNode(Name = "base_node")
@@ -87,7 +88,7 @@ class Crane:
             )
 
         
-        print('khanh', self.arm2.arm_end_node)
+        #print('khanh', self.arm2.arm_end_node)
 
         self.hook =  Hook()
-        self.hook.my_constructor(PARENT_NODE = self.arm2.arm_end_node, SIZE = 0.025)
+        self.hook.my_constructor(PARENT_NODE = self.arm2.arm_end_node, SIZE = 0.025, TARGET_LIST = TARGET_LIST)

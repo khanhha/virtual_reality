@@ -74,7 +74,7 @@ class Constraint(avango.script.Script):
         else:
             delta = 0
 
-        # ToDo: apply rotation constraints here        
+        #rotate back a angle of delta to ensure that the rotation angle isn't outside the range 
         self.sf_mat.value = avango.gua.make_rot_mat(-delta, 0, 1, 0) * self.sf_mat.value 
 
 
