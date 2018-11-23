@@ -178,8 +178,11 @@ class ManipulationManager(avango.script.Script):
     ## (e.g. mouse button for isotonic input) is pressed down
     def start_dragging(self):
         _hand_mat = self.hand_transform.WorldTransform.value
+        self._prev_hand_mat = _hand_mat
 
         for _node in self.TARGET_LIST:
+            #print(self.TARGET_LIST)
+            #print(_node.DraggingOffsetMatrix)
             if self.is_highlight_material(_node.CurrentColor.value) == True: # a monkey node in close proximity
                 _node.CurrentColor.value = avango.gua.Vec4(1.0, 0.0, 0.0, 1.0)
                 _node.Material.value.set_uniform("Color", _node.CurrentColor.value) # switch to dragging material
@@ -187,10 +190,24 @@ class ManipulationManager(avango.script.Script):
           
                 ## TODO: add code if necessary
 
-
     ## This function is called while the dragging button
     ## (e.g. mouse button for isotonic input) is pressed
     def object_dragging(self):
+        #print(len(self.dragged_objects_list))
+        #print(self.hand_transform.WorldTransform.value)
+        if len(self.dragged_objects_list) > 0:
+            _hand_mat = self.hand_transform.WorldTransform.value
+            for _node in self.dragged_objects_list:
+                _cur_translate = _hand_mat.get_translate()
+                _prev_translate = self._prev_hand_mat.get_translate()
+                _delta = _cur_translate - _prev_translate
+                
+                _node.Transform.value = avango.gua.make_trans_mat(_delta) * _node.Transform.value
+            
+            self._prev_hand_mat = _hand_mat
+
+        #for _node in self.dragged_objects_list:
+        #    _node.
         pass
         ## TODO: add code if necessary
 
@@ -207,6 +224,7 @@ class ManipulationManager(avango.script.Script):
         self.dragged_objects_list = [] # clear list
 
         ## TODO: add code if necessary
+        self._prev_hand_mat = None
 
  
     ########################## End of Exercise 4.2

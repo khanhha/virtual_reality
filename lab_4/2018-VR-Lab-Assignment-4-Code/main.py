@@ -31,7 +31,7 @@ def start():
 
 
     ## init viewing setup
-    viewingSetup = SimpleViewingSetup(SCENEGRAPH = scenegraph, STEREO_MODE = "mono")
+    viewingSetup = SimpleViewingSetup(SCENEGRAPH = scenegraph, STEREO_MODE = "anaglyph")
     #viewingSetup = SimpleViewingSetup(SCENEGRAPH = scenegraph, STEREO_MODE = "anaglyph")
     viewingSetup.connect_navigation_matrix(steeringNavigation.sf_nav_mat)
     steeringNavigation.set_rotation_center_offset(viewingSetup.get_head_position())
