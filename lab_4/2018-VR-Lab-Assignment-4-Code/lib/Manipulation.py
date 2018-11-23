@@ -201,7 +201,7 @@ class ManipulationManager(avango.script.Script):
                 _cur_translate = _hand_mat.get_translate()
                 _prev_translate = self._prev_hand_mat.get_translate()
                 _delta = _cur_translate - _prev_translate
-                
+
                 _node.Transform.value = avango.gua.make_trans_mat(_delta) * _node.Transform.value
             
             self._prev_hand_mat = _hand_mat
@@ -324,6 +324,7 @@ class ManipulationManager(avango.script.Script):
         
 
 
+import time
 
 class Manipulation(avango.script.Script):
 
@@ -409,16 +410,17 @@ class IsotonicPositionControlManipulation(Manipulation):
         self.mf_dof.connect_from(MF_DOF)
         self.mf_buttons.connect_from(MF_BUTTONS)
 
-
     ## implement respective base-class function
     def manipulate(self):
+        #print('hello')
         _x = self.mf_dof.value[0]
         _y = self.mf_dof.value[1]
         _z = self.mf_dof.value[2]
           
-        _x *= 0.1
-        _y *= 0.1
-        _z *= 0.1
+        k  = 0.1
+        _x *= k
+        _y *= k
+        _z *= k
        
         # accumulate input
         _new_mat = avango.gua.make_trans_mat(_x, _y, _z) * self.sf_mat.value
@@ -446,21 +448,46 @@ class IsotonicRateControlManipulation(Manipulation):
         # init field connections
         self.mf_dof.connect_from(MF_DOF)
         self.mf_buttons.connect_from(MF_BUTTONS)
-
+        self.prev_t = time.time()
 
     ## implement respective base-class function
     def manipulate(self):
-        pass
+        #print('hello')
+        _cur_t = time.time()
+        _delta_t = _cur_t - self.prev_t
+
         ## TODO: add code
+        _x = self.mf_dof.value[0]
+        _y = self.mf_dof.value[1]
+        _z = self.mf_dof.value[2]
+        print(_x, _y, _z)
+        _vmx = _x / _delta_t 
+        _vmy = _y / _delta_t
+        _vmz = _z / _delta_t
+
+        _vx = _vmx * 0.1
+        _vy = _vmy * 0.1
+        _vz = _vmz * 0.1
+        # accumulate input
+        _new_mat = avango.gua.make_trans_mat(_vx*_delta_t, _vy*_delta_t, _vz*_delta_t) * self.sf_mat.value
+
+        # possibly clamp matrix (to screen space borders)
+        _new_mat = self.clamp_matrix(_new_mat)
+
+        self.sf_mat.value = _new_mat # apply new matrix to field
     
-    
+        self.prev_t = _cur_t
+
     ## implement respective base-class function
     def reset(self):
+        self.sf_mat.value = avango.gua.make_identity_mat() # snap hand back to screen center
+        self.prev_t = time.time()
         pass
         ## TODO: add code
 
 
 
+import sys
 class IsotonicAccelerationControlManipulation(Manipulation):
 
     def my_constructor(self, MF_DOF, MF_BUTTONS):
@@ -470,15 +497,48 @@ class IsotonicAccelerationControlManipulation(Manipulation):
         self.mf_dof.connect_from(MF_DOF)
         self.mf_buttons.connect_from(MF_BUTTONS)
 
+        self.prev_t = time.time()
+        self.prev_v = (0.0, 0.0, 0.0)
 
     ## implement respective base-class function
     def manipulate(self):
+        #print('isotonic_acceleration')
+        _cur_t = time.time()
+        _delta_t = _cur_t - self.prev_t
+        
+        _x = self.mf_dof.value[0]
+        _y = self.mf_dof.value[1]
+        _z = self.mf_dof.value[2]
+
+
+        cur_v = (_x / _delta_t, _y/_delta_t, _z/_delta_t)
+        m_acc = [(cur_v[i] - self.prev_v[i])/_delta_t for i in range(3)]
+        print(m_acc, file=sys.stderr)
+
+        h_acc = [0.1*m_acc[i] for i in range(3)]
+        h_dist = [0.5*h_acc[i]*_delta_t**2 for i in range(3)]
+
+        # accumulate input
+        _new_mat = avango.gua.make_trans_mat(h_dist[0], h_dist[1], h_dist[2]) * self.sf_mat.value
+
+        # possibly clamp matrix (to screen space borders)
+        _new_mat = self.clamp_matrix(_new_mat)
+
+        self.sf_mat.value = _new_mat # apply new matrix to field
+    
+
+        self.prev_v = cur_v
+        self.prev_t = _cur_t
+
         pass
         ## TODO: add code
 
 
     ## implement respective base-class function
     def reset(self):
+        self.sf_mat.value = avango.gua.make_identity_mat() # snap hand back to screen center
+        self.prev_v = (0.0, 0.0, 0.0)
+        self.prev_t = time.time()
         pass
         ## TODO: add code
 
@@ -503,12 +563,32 @@ class ElasticPositionControlManipulation(Manipulation):
 
     ## implement respective base-class function
     def manipulate(self):
+        _x = self.mf_dof.value[0]
+        _y = self.mf_dof.value[1]
+        _z = self.mf_dof.value[2]
+
+        print('hello:', _x, _y, _z)
+
+        k  = 0.1
+        _x *= k
+        _y *= k
+        _z *= k
+       
+        # accumulate input
+        _new_mat = avango.gua.make_trans_mat(_x, _y, _z) * self.sf_mat.value
+
+        # possibly clamp matrix (to screen space borders)
+        _new_mat = self.clamp_matrix(_new_mat)
+
+        self.sf_mat.value = _new_mat # apply new matrix to field
+
         pass
         # TODO: add code
 
 
     ## implement respective base-class function
     def reset(self):
+        self.sf_mat.value = avango.gua.make_identity_mat() # snap hand back to screen center
         pass
         # TODO: add code
 
