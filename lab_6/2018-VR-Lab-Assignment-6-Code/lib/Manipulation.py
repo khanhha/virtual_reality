@@ -54,7 +54,7 @@ class ManipulationManager(avango.script.Script):
 
     
         ### set initial states ###
-        self.set_manipulation_technique(1) # switch to virtual-ray manipulation technique
+        self.set_manipulation_technique(2) # switch to virtual-ray manipulation technique
 
 
 
@@ -544,15 +544,21 @@ class GoGo(ManipulationTechnique):
         ### parameters ###  
         self.intersection_point_size = 0.03 # in meter
         self.gogo_threshold = 0.35 # in meter
-
+        self.gogo_k = 1.5;
 
         ### resources ###
  
         ## To-Do: init (geometry) nodes here
- 
+        _loader = avango.gua.nodes.TriMeshLoader()
+
+        self.hand_geometry = _loader.create_geometry_from_file("hand_geometry", "data/objects/hand.obj", avango.gua.LoaderFlags.DEFAULTS)
+        #self.hand_geometry.Transform.value = avango.gua.make_trans_mat(0.0,0.0,0.0) * avango.gua.make_scale_mat(1, 1, 1)
+        self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,1.0,1.0,1.0))
+        self.pointer_node.Children.value.append(self.hand_geometry)
+
+
         ### set initial states ###
         self.enable(False)
-
 
 
     ### callback functions ###
@@ -561,6 +567,20 @@ class GoGo(ManipulationTechnique):
             return
 
         ## To-Do: implement Go-Go technique here
+        hand_loc = self.pointer_node.WorldTransform.value.get_translate()
+        local_hand_loc = avango.gua.make_inverse_mat(self.HEAD_NODE.WorldTransform.value) * hand_loc
+        d = local_hand_loc.length()
+        local_dir = local_hand_loc / d
+        local_dir.y = 0.0
+        if d  >= self.gogo_threshold:
+            local_delta = local_dir * self.gogo_k*(d - self.gogo_threshold)
+            print(local_dir)
+            world_delta = self.HEAD_NODE.WorldTransform.value * local_delta
+
+            pointer_local_delta = avango.gua.make_inverse_mat(self.pointer_node.WorldTransform.value) * world_delta
+
+            self.pointer_node.Transform.value = avango.gua.make_trans_mat(pointer_local_delta[0], pointer_local_delta[1], pointer_local_delta[2]) * self.pointer_node.Transform.value
+
 
             
 
