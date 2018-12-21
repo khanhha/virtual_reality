@@ -402,11 +402,11 @@ class DepthRay(ManipulationTechnique):
 
 
         ### parameters ###
-        self.ray_length = 2.5 # in meter
+        self.ray_length = 8.5 # in meter
         self.ray_thickness = 0.01 # in meter
         self.depth_marker_size = 0.03
         self.intersection_point_size = 0.03 # in meter
-
+        self.prev_angle = 0.0
         
         ### resources ###
 
@@ -422,13 +422,14 @@ class DepthRay(ManipulationTechnique):
         self.pointer_node.Children.value.append(self.ray_geometry)
 
 
-        self.intersection_geometry = _loader.create_geometry_from_file("intersection_geometry", "data/objects/sphere.obj", avango.gua.LoaderFlags.DEFAULTS)
-        self.intersection_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,0.0,0.0,1.0))
-        SCENEGRAPH.Root.value.Children.value.append(self.intersection_geometry)
+        #self.intersection_geometry = _loader.create_geometry_from_file("intersection_geometry", "data/objects/sphere.obj", avango.gua.LoaderFlags.DEFAULTS)
+        #self.intersection_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,0.0,0.0,1.0))
+        #SCENEGRAPH.Root.value.Children.value.append(self.intersection_geometry)
 
         self.depth_marker_geometry = _loader.create_geometry_from_file('depth_marker_geometry', 'data/objects/sphere.obj', avango.gua.LoaderFlags.DEFAULTS)
         self.depth_marker_geometry.Material.value.set_uniform('Color', avango.gua.Vec4(0.0,1.0,1.0,1.0))
-        SCENEGRAPH.Root.value.Children.value.append(self.depth_marker_geometry)
+        self.depth_marker_geometry.Transform.value = avango.gua.make_trans_mat(0,0,-2) * avango.gua.make_scale_mat(self.depth_marker_size)
+        self.pointer_node.Children.value.append(self.depth_marker_geometry)
 
         ### set initial states ###
         self.enable(False)
@@ -436,63 +437,84 @@ class DepthRay(ManipulationTechnique):
     def enable(self, BOOL):
         ManipulationTechnique.enable(self, BOOL) # call base-class function
 
+        self.prev_angle = self.get_roll_angle(self.pointer_node.WorldTransform.value)
+
         if self.enable_flag == False:
-            self.intersection_geometry.Tags.value = ["invisible"] # set intersection point invisible
+            #self.intersection_geometry.Tags.value = ["invisible"] # set intersection point invisible
             self.depth_marker_geometry.Tags.value = ["invisible"]
 
 
     def update_ray_visualization(self, PICK_WORLD_POS = None, PICK_DISTANCE = 0.0):
-        if PICK_WORLD_POS is None: # nothing hit
-            # set ray to default length
-            self.ray_geometry.Transform.value = \
-                avango.gua.make_trans_mat(0.0,0.0,self.ray_length * -0.5) * \
-                avango.gua.make_scale_mat(self.ray_thickness, self.ray_thickness, self.ray_length)
-        
-            self.intersection_geometry.Tags.value = ["invisible"] # set intersection point invisible
-            self.depth_marker_geometry.Tags.value = ["invisible"]
+        # update ray length and intersection point
+        #self.ray_geometry.Transform.value = \
+        #    avango.gua.make_trans_mat(0.0,0.0,self.ray_length * -0.5) * \
+        #    avango.gua.make_scale_mat(self.ray_thickness, self.ray_thickness, self.ray_length)
 
-        else: # something hit
-            # update ray length and intersection point
-            self.ray_geometry.Transform.value = \
-                avango.gua.make_trans_mat(0.0,0.0,PICK_DISTANCE * -0.5) * \
-                avango.gua.make_scale_mat(self.ray_thickness, self.ray_thickness, PICK_DISTANCE)
+        cur_angle = self.get_roll_angle(self.pointer_node.WorldTransform.value)
+        delta_angle = cur_angle - self.prev_angle
+        delta_z = 0.05 * delta_angle
+        self.prev_angle = cur_angle
+        #print('detal value: =', delta_z)
+        self.depth_marker_geometry.Tags.value = []
+        self.depth_marker_geometry.Transform.value =  avango.gua.make_trans_mat(0,0,delta_z) * self.depth_marker_geometry.Transform.value 
 
-            self.intersection_geometry.Tags.value = [] # set intersection point visible
-            self.intersection_geometry.Transform.value = avango.gua.make_trans_mat(PICK_WORLD_POS) * avango.gua.make_scale_mat(self.intersection_point_size)
 
-            self.depth_marker_geometry.Tags.value = []
-            self.depth_marker_geometry.Transform.value = avango.gua.make_trans_mat(PICK_WORLD_POS) *  avango.gua.make_scale_mat(5*self.intersection_point_size)
+    def selection(self):
+        if len(self.mf_pick_result.value) > 0: # intersection found
+            inv_mat = avango.gua.make_inverse_mat(self.depth_marker_geometry.WorldTransform.value)
+            cls_dst = 999999.0
+            cls_idx = 0
+            all_dsts = [] #for debugging
+            for idx, ret in enumerate(self.mf_pick_result.value):
+                pos = ret.WorldPosition.value # pick position in world coordinate system
+                local_pos = inv_mat * pos
+                dst = local_pos.length()
+                all_dsts.append(dst)
+                if dst < cls_dst:
+                    cls_dst = dst
+                    cls_idx = idx
+            print(all_dsts, 'cls_idx = ', cls_idx)
+            self.pick_result = self.mf_pick_result.value[cls_idx] # get first pick result
 
+        else: # nothing hit
+            self.pick_result = None
+
+
+        ## disable previous node highlighting
+        if self.selected_node is not None:
+            for _child_node in self.selected_node.Children.value:
+                if _child_node.get_type() == 'av::gua::TriMeshNode':
+                    _child_node.Material.value.set_uniform("enable_color_override", False)
+
+
+        if self.pick_result is not None: # something was hit
+            self.selected_node = self.pick_result.Object.value # get intersected geometry node
+            self.selected_node = self.selected_node.Parent.value # take the parent node of the geomtry node (the whole object)
+
+        else:
+            self.selected_node = None
+
+
+        ## enable node highlighting
+        if self.selected_node is not None:
+            for _child_node in self.selected_node.Children.value:
+                if _child_node.get_type() == 'av::gua::TriMeshNode':
+                    _child_node.Material.value.set_uniform("enable_color_override", True)
+                    _child_node.Material.value.set_uniform("override_color", avango.gua.Vec4(1.0,0.0,0.0,0.3)) # 30% color override
 
     ### callback functions ###
     def evaluate(self): # implement respective base-class function
         if self.enable_flag == False:
             return
         
-        angle = self.get_roll_angle(self.pointer_node.WorldTransform.value)
-        print('roll angle = ', angle)
-
         ## calc ray intersection
         ManipulationTechnique.update_intersection(self, PICK_MAT = self.pointer_node.WorldTransform.value, PICK_LENGTH = self.ray_length) # call base-class function
 
-        ## update object selection
-        ManipulationTechnique.selection(self) # call base-class function
-
         ## update visualizations
-        if self.pick_result is None:
-            self.update_ray_visualization() # apply default ray visualization
-        else:
-            _node = self.pick_result.Object.value # get intersected geometry node
-    
-            _pick_pos = self.pick_result.Position.value # pick position in object coordinate system
-            _pick_world_pos = self.pick_result.WorldPosition.value # pick position in world coordinate system
-    
-            _distance = self.pick_result.Distance.value * self.ray_length # pick distance in ray coordinate system
-    
-            #print(_node, _pick_pos, _pick_world_pos, _distance)
-        
-            self.update_ray_visualization(PICK_WORLD_POS = _pick_world_pos, PICK_DISTANCE = _distance)
+        self.update_ray_visualization() # apply default ray visualization
 
+        ## update object selection
+        self.selection() # call base-class function
         
         ## possibly perform object dragging
         ManipulationTechnique.dragging(self) # call base-class function
