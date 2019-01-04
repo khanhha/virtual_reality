@@ -11,6 +11,7 @@ import avango.daemon
 import math
 import sys
 
+from datetime import datetime
 
 class ManipulationManager(avango.script.Script):
 
@@ -54,7 +55,7 @@ class ManipulationManager(avango.script.Script):
 
     
         ### set initial states ###
-        self.set_manipulation_technique(2) # switch to virtual-ray manipulation technique
+        self.set_manipulation_technique(3) # switch to virtual-ray manipulation technique
 
 
 
@@ -594,6 +595,7 @@ class GoGo(ManipulationTechnique):
         # possibly perform object dragging
         ManipulationTechnique.dragging(self) # call base-class function
 
+import time
 class VirtualHand(ManipulationTechnique):
 
     ## constructor
@@ -621,15 +623,73 @@ class VirtualHand(ManipulationTechnique):
         ### resources ###
 
         ## To-Do: init (geometry) nodes here        
+        _loader = avango.gua.nodes.TriMeshLoader()
+
+        self.hand_geometry = _loader.create_geometry_from_file("hand_geometry", "data/objects/hand.obj", avango.gua.LoaderFlags.DEFAULTS)
+        #self.hand_geometry.Transform.value = avango.gua.make_trans_mat(0.0,0.0,0.0) * avango.gua.make_scale_mat(1, 1, 1)
+        self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,1.0,1.0,1.0))
+        self.pointer_node.Children.value.append(self.hand_geometry)
 
         ### set initial states ###
         self.enable(False)
 
+        self.reset_state()
+    
+    def reset_state(self):
+        self.acc_delta_time = 0.0
+        self.last_pointer_pos = avango.gua.Vec3(0.0,0.0,0.0)
+        self.prev_frame_time = 0.0
+        self.prev_frame_pointer_pos  = avango.gua.Vec3(0.0,0.0,0.0)
+        self.K = 0.0
+
+    def enable(self, BOOL):
+        ManipulationTechnique.enable(self, BOOL) # call base-class function
+        self.reset_state()
 
     ### callback functions ###
     def evaluate(self): # implement respective base-class function
         if self.enable_flag == False:
             return
 
-        ## To-Do: implement Virtual Hand (with PRISM filter) technique here
-        
+        #To-Do: implement Virtual Hand (with PRISM filter) technique here
+        cur_time = time.time() * 1000 # in milisecond
+        delta_time = cur_time - self.prev_frame_time
+        self.prev_frame_time = cur_time
+        self.acc_delta_time = self.acc_delta_time + delta_time
+        if self.acc_delta_time > 500.0:
+            self.acc_delta_time = 0.0
+            cur_pointer_pos = self.pointer_node.WorldTransform.value.get_translate()
+            v_hand = (cur_pointer_pos - self.last_pointer_pos).length()
+            print('v_hand: ', v_hand/0.5)
+            self.last_pointer_pos = cur_pointer_pos #reset hand position
+
+            if v_hand < self.min_vel:
+                self.K = 0.0
+            elif self.min_vel < v_hand and v_hand < self.max_vel:
+                self.K  = v_hand / self.sc_vel
+            else:
+                self.K = 1.0
+
+        cur_frame_pointer_pos =  self.pointer_node.WorldTransform.value.get_translate()
+        d_obj = cur_frame_pointer_pos - self.prev_frame_pointer_pos
+        self.prev_frame_pointer_pos = cur_frame_pointer_pos
+
+        #print('K = ', self.K , 'd_obj = ', d_obj)
+
+        new_d_obj = d_obj * self.K
+
+        dif_d_obj = new_d_obj - d_obj
+
+        #print('d_obj = ', d_obj, 'K = ', self.K, 'dif_d_obj = ', dif_d_obj)
+
+        new_hand_mat = avango.gua.make_trans_mat(dif_d_obj[0], dif_d_obj[1], dif_d_obj[2]) * self.hand_geometry.Transform.value 
+        print('new_hand_mat_trans = ', new_hand_mat.get_translate())
+
+        self.hand_geometry.Transform.value = new_hand_mat
+
+        #pick objects
+        ManipulationTechnique.update_intersection(self, PICK_MAT = self.hand_geometry.WorldTransform.value, PICK_LENGTH = 0.5) # call base-class function
+        ## update object selection
+        ManipulationTechnique.selection(self) # call base-class function
+        # possibly perform object dragging
+        ManipulationTechnique.dragging(self) # call base-class function
