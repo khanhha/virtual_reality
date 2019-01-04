@@ -575,7 +575,8 @@ class GoGo(ManipulationTechnique):
             hand_head_dir = hand_head_loc/hand_head_len
             hand_head_delta = hand_head_dir * 1.5 * (hand_head_len-self.gogo_threshold) ** 2
 
-            hand_head_new = avango.gua.make_trans_mat(hand_head_delta[0], hand_head_delta[1], hand_head_delta[2])
+            #TODO: why doesn't it work with hand_head_mat?
+            hand_head_new = avango.gua.make_trans_mat(hand_head_delta[0], hand_head_delta[1], hand_head_delta[2]) #* hand_head_mat
             hand_world_new = self.pointer_node.WorldTransform.value * hand_head_new
 
             hand_geo_delta_mat = avango.gua.make_inverse_mat(self.pointer_node.WorldTransform.value) * hand_world_new
@@ -590,6 +591,8 @@ class GoGo(ManipulationTechnique):
         ## update object selection
         ManipulationTechnique.selection(self) # call base-class function
 
+        # possibly perform object dragging
+        ManipulationTechnique.dragging(self) # call base-class function
 
 class VirtualHand(ManipulationTechnique):
 
