@@ -569,24 +569,27 @@ class GoGo(ManipulationTechnique):
         hand_head_mat = avango.gua.make_inverse_mat(self.HEAD_NODE.WorldTransform.value) * self.pointer_node.WorldTransform.value
         hand_head_loc = hand_head_mat.get_translate()
         hand_head_len = hand_head_loc.length()
-        print('local hand in head basis: ', hand_head_loc, 'distance = ', hand_head_loc.length())
+        self.hand_geometry.Transform.value = avango.gua.make_trans_mat(0.0, 0.0, 0.0)
+
         if hand_head_len  >= self.gogo_threshold:
             hand_head_dir = hand_head_loc/hand_head_len
-            hand_head_delta = hand_head_dir * 0.01*(hand_head_len-self.gogo_threshold)**2
-            hand_head_loc_new = hand_head_loc + hand_head_delta
-            #print(hand_head_delta)
+            hand_head_delta = hand_head_dir * 1.5 * (hand_head_len-self.gogo_threshold) ** 2
 
-            hand_world_loc_new  = self.HEAD_NODE.WorldTransform.value * hand_head_loc_new
-            hand_world_loc_cur  = self.pointer_node.WorldTransform.value.get_translate()
-            #print('hand_world_loc_new: ',hand_world_loc_new,  'hand_world_loc_cur: ', hand_world_loc_cur)
+            hand_head_new = avango.gua.make_trans_mat(hand_head_delta[0], hand_head_delta[1], hand_head_delta[2])
+            hand_world_new = self.pointer_node.WorldTransform.value * hand_head_new
+
+            hand_geo_delta_mat = avango.gua.make_inverse_mat(self.pointer_node.WorldTransform.value) * hand_world_new
+
+            print('hand_head_delta: ',hand_geo_delta_mat.get_translate())
             
-            delta_hand = avango.gua.Vec3(hand_world_loc_new[0], hand_world_loc_new[1], hand_world_loc_new[2]) - hand_world_loc_cur
-            #print('hand_head_delta: ',hand_head_delta,  'hand world delta: ', delta_hand)
-            self.hand_geometry.Transform.value = avango.gua.make_trans_mat(delta_hand[0], delta_hand[1], delta_hand[2]) * self.hand_geometry.Transform.value
+            self.hand_geometry.Transform.value = hand_geo_delta_mat
+        
+                ## calc ray intersection
+        ManipulationTechnique.update_intersection(self, PICK_MAT = self.hand_geometry.WorldTransform.value, PICK_LENGTH = 1) # call base-class function
 
+        ## update object selection
+        ManipulationTechnique.selection(self) # call base-class function
 
-
-            
 
 class VirtualHand(ManipulationTechnique):
 
