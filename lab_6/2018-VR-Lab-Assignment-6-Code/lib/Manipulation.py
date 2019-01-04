@@ -544,7 +544,7 @@ class GoGo(ManipulationTechnique):
         ### parameters ###  
         self.intersection_point_size = 0.03 # in meter
         self.gogo_threshold = 0.35 # in meter
-        self.gogo_k = 1.5;
+        self.gogo_k = 0.2;
 
         ### resources ###
  
@@ -556,7 +556,6 @@ class GoGo(ManipulationTechnique):
         self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,1.0,1.0,1.0))
         self.pointer_node.Children.value.append(self.hand_geometry)
 
-
         ### set initial states ###
         self.enable(False)
 
@@ -567,19 +566,24 @@ class GoGo(ManipulationTechnique):
             return
 
         ## To-Do: implement Go-Go technique here
-        hand_loc = self.pointer_node.WorldTransform.value.get_translate()
-        local_hand_loc = avango.gua.make_inverse_mat(self.HEAD_NODE.WorldTransform.value) * hand_loc
-        d = local_hand_loc.length()
-        local_dir = local_hand_loc / d
-        local_dir.y = 0.0
-        if d  >= self.gogo_threshold:
-            local_delta = local_dir * self.gogo_k*(d - self.gogo_threshold)
-            print(local_dir)
-            world_delta = self.HEAD_NODE.WorldTransform.value * local_delta
+        hand_head_mat = avango.gua.make_inverse_mat(self.HEAD_NODE.WorldTransform.value) * self.pointer_node.WorldTransform.value
+        hand_head_loc = hand_head_mat.get_translate()
+        hand_head_len = hand_head_loc.length()
+        print('local hand in head basis: ', hand_head_loc, 'distance = ', hand_head_loc.length())
+        if hand_head_len  >= self.gogo_threshold:
+            hand_head_dir = hand_head_loc/hand_head_len
+            hand_head_delta = hand_head_dir * 0.01*(hand_head_len-self.gogo_threshold)**2
+            hand_head_loc_new = hand_head_loc + hand_head_delta
+            #print(hand_head_delta)
 
-            pointer_local_delta = avango.gua.make_inverse_mat(self.pointer_node.WorldTransform.value) * world_delta
+            hand_world_loc_new  = self.HEAD_NODE.WorldTransform.value * hand_head_loc_new
+            hand_world_loc_cur  = self.pointer_node.WorldTransform.value.get_translate()
+            #print('hand_world_loc_new: ',hand_world_loc_new,  'hand_world_loc_cur: ', hand_world_loc_cur)
+            
+            delta_hand = avango.gua.Vec3(hand_world_loc_new[0], hand_world_loc_new[1], hand_world_loc_new[2]) - hand_world_loc_cur
+            #print('hand_head_delta: ',hand_head_delta,  'hand world delta: ', delta_hand)
+            self.hand_geometry.Transform.value = avango.gua.make_trans_mat(delta_hand[0], delta_hand[1], delta_hand[2]) * self.hand_geometry.Transform.value
 
-            self.pointer_node.Transform.value = avango.gua.make_trans_mat(pointer_local_delta[0], pointer_local_delta[1], pointer_local_delta[2]) * self.pointer_node.Transform.value
 
 
             
