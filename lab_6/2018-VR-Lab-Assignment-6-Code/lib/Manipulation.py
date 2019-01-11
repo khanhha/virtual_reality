@@ -266,7 +266,6 @@ class ManipulationTechnique(avango.script.Script):
 
 
     ### callback functions ###
-
     @field_has_changed(sf_button)
     def sf_button_changed(self):
         if self.sf_button.value == True: # button pressed
@@ -615,10 +614,12 @@ class VirtualHand(ManipulationTechnique):
         ### parameters ###
         self.intersection_point_size = 0.03 # in meter
 
-        self.min_vel = 0.01 / 60.0 # in meter/sec
-        self.sc_vel = 0.15 / 60.0 # in meter/sec
-        self.max_vel = 0.25 / 60.0 # in meter/sec
-
+        # self.min_vel = 0.01 / 60.0 # in meter/sec
+        # self.sc_vel = 0.15 / 60.0 # in meter/sec
+        # self.max_vel = 0.25 / 60.0 # in meter/sec
+        self.min_vel = 1.6 / 60.0 # in meter/sec
+        self.sc_vel = 2.6 / 60.0 # in meter/sec
+        self.max_vel = 4.0 / 60.0 # in meter/sec
 
         ### resources ###
 
@@ -628,7 +629,13 @@ class VirtualHand(ManipulationTechnique):
         self.hand_geometry = _loader.create_geometry_from_file("hand_geometry", "data/objects/hand.obj", avango.gua.LoaderFlags.DEFAULTS)
         #self.hand_geometry.Transform.value = avango.gua.make_trans_mat(0.0,0.0,0.0) * avango.gua.make_scale_mat(1, 1, 1)
         self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,1.0,1.0,1.0))
-        self.pointer_node.Children.value.append(self.hand_geometry)
+        self.real_hand_loc_sphere = _loader.create_geometry_from_file("real_hand_loc_sphere", "data/objects/sphere.obj", avango.gua.LoaderFlags.DEFAULTS)
+        self.real_hand_loc_sphere.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,1.0,1.0))
+        self.real_hand_loc_sphere.Transform.value = avango.gua.make_scale_mat(0.02, 0.02, 0.02)
+  
+        #self.pointer_node.Children.value.append(self.hand_geometry)
+        self.pointer_node.parent.value.append(self.hand_geometry)
+        self.pointer_node.Children.value.append(self.real_hand_loc_sphere)
 
         ### set initial states ###
         self.enable(False)
@@ -639,7 +646,8 @@ class VirtualHand(ManipulationTechnique):
         self.acc_delta_time = 0.0
         self.last_pointer_pos = avango.gua.Vec3(0.0,0.0,0.0)
         self.prev_frame_time = 0.0
-        self.prev_frame_pointer_pos  = avango.gua.Vec3(0.0,0.0,0.0)
+        self.prev_frame_pointer_pos = None
+        self.hand_disp = avango.gua.Vec3(0.0, 0.0, 0.0)
         self.K = 0.0
 
     def enable(self, BOOL):
@@ -651,6 +659,7 @@ class VirtualHand(ManipulationTechnique):
         if self.enable_flag == False:
             return
 
+
         #To-Do: implement Virtual Hand (with PRISM filter) technique here
         cur_time = time.time() * 1000 # in milisecond
         delta_time = cur_time - self.prev_frame_time
@@ -660,32 +669,38 @@ class VirtualHand(ManipulationTechnique):
             self.acc_delta_time = 0.0
             cur_pointer_pos = self.pointer_node.WorldTransform.value.get_translate()
             v_hand = (cur_pointer_pos - self.last_pointer_pos).length()
-            print('v_hand: ', v_hand/0.5)
+            #print('v_hand: ', v_hand/0.5)
             self.last_pointer_pos = cur_pointer_pos #reset hand position
 
-            if v_hand < self.min_vel:
+            if v_hand <= self.min_vel:
+                self.real_hand_loc_sphere.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,0.0,0.0,1.0))
                 self.K = 0.0
-            elif self.min_vel < v_hand and v_hand < self.max_vel:
+            elif self.min_vel < v_hand and v_hand <= self.sc_vel:
+                self.real_hand_loc_sphere.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,1.0,0.0,1.0))
                 self.K  = v_hand / self.sc_vel
+                assert self.K > 0.0 and self.K <= 1.0
             else:
+                self.real_hand_loc_sphere.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,0.0,1.0,1.0))
                 self.K = 1.0
-
+        
         cur_frame_pointer_pos =  self.pointer_node.WorldTransform.value.get_translate()
-        d_obj = cur_frame_pointer_pos - self.prev_frame_pointer_pos
-        self.prev_frame_pointer_pos = cur_frame_pointer_pos
+        if self.prev_frame_pointer_pos is None:
+            self.prev_frame_pointer_pos = cur_frame_pointer_pos
+        else:
+            if self.K == 0.0:
+                d_obj = cur_frame_pointer_pos - self.prev_frame_pointer_pos
+                print('cur_trans  = ', cur_frame_pointer_pos)
+                print('prev_trans = ', self.prev_frame_pointer_pos)
+                self.prev_frame_pointer_pos = cur_frame_pointer_pos
+                new_d_obj = d_obj * self.K
+                dif_d_obj = new_d_obj - d_obj
+                #print('hand backward translation in its local basis = ', dif_d_obj)
+                hand_disp = hand_disp + dif_d_obj
+            else:
+                hand_disp = avango.gua.Vec3(0.0, 0.0, 0.0)
 
-        #print('K = ', self.K , 'd_obj = ', d_obj)
-
-        new_d_obj = d_obj * self.K
-
-        dif_d_obj = new_d_obj - d_obj
-
-        #print('d_obj = ', d_obj, 'K = ', self.K, 'dif_d_obj = ', dif_d_obj)
-
-        new_hand_mat = avango.gua.make_trans_mat(dif_d_obj[0], dif_d_obj[1], dif_d_obj[2]) * self.hand_geometry.Transform.value 
-        print('new_hand_mat_trans = ', new_hand_mat.get_translate())
-
-        self.hand_geometry.Transform.value = new_hand_mat
+        self.hand_geometry.Transform.value = self.pointer_node.Transform.value
+        self.hand_geometry.Transform.value = avango.gua.make_trans_mat(self.hand_disp[0], self.hand_disp[1], self.hand_disp[2]) *  self.hand_geometry.Transform.value
 
         #pick objects
         ManipulationTechnique.update_intersection(self, PICK_MAT = self.hand_geometry.WorldTransform.value, PICK_LENGTH = 0.5) # call base-class function
