@@ -55,7 +55,7 @@ class ManipulationManager(avango.script.Script):
 
     
         ### set initial states ###
-        self.set_manipulation_technique(3) # switch to virtual-ray manipulation technique
+        self.set_manipulation_technique(2) # switch to virtual-ray manipulation technique
 
 
 
@@ -519,7 +519,7 @@ class DepthRay(ManipulationTechnique):
         ## possibly perform object dragging
         ManipulationTechnique.dragging(self) # call base-class function
 
-
+import math
 class GoGo(ManipulationTechnique):
 
     ## constructor
@@ -544,7 +544,7 @@ class GoGo(ManipulationTechnique):
         ### parameters ###  
         self.intersection_point_size = 0.03 # in meter
         self.gogo_threshold = 0.35 # in meter
-        self.gogo_k = 0.2;
+        self.gogo_k = 3.0;
 
         ### resources ###
  
@@ -553,49 +553,98 @@ class GoGo(ManipulationTechnique):
 
         self.hand_geometry = _loader.create_geometry_from_file("hand_geometry", "data/objects/hand.obj", avango.gua.LoaderFlags.DEFAULTS)
         #self.hand_geometry.Transform.value = avango.gua.make_trans_mat(0.0,0.0,0.0) * avango.gua.make_scale_mat(1, 1, 1)
-        self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(0.0,1.0,1.0,1.0))
-        self.pointer_node.Children.value.append(self.hand_geometry)
-
+        self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,1.0,1.0))
+        #self.pointer_node.Children.value.append(self.hand_geometry)
+        NAVIGATION_NODE.Children.value.append(self.hand_geometry)
         ### set initial states ###
         self.enable(False)
 
+    def enable(self, BOOL):
+        ManipulationTechnique.enable(self, BOOL) # call base-class function
+        if self.enable_flag == False:
+            self.hand_geometry.Tags.value = ["invisible"] # set tool invisible
+        else:
+            self.hand_geometry.Tags.value = [] # set tool invisible
+
+    def selection(self):
+        if len(self.mf_pick_result.value) > 0: # intersection found
+            inv_mat = avango.gua.make_inverse_mat(self.hand_geometry.WorldTransform.value)
+            cls_dst = 999999.0
+            cls_idx = 0
+            all_dsts = [] #for debugging
+            for idx, ret in enumerate(self.mf_pick_result.value):
+                pos = ret.WorldPosition.value # pick position in world coordinate system
+                local_pos = inv_mat * pos
+                dst = local_pos.length()
+                all_dsts.append(dst)
+                if dst < cls_dst:
+                    cls_dst = dst
+                    cls_idx = idx
+            if cls_dst < 0.25:
+                self.pick_result = self.mf_pick_result.value[cls_idx] # get first pick result
+            else:
+                self.pick_result = None
+
+        else: # nothing hit
+            self.pick_result = None
+
+        ## disable previous node highlighting
+        if self.selected_node is not None:
+            for _child_node in self.selected_node.Children.value:
+                if _child_node.get_type() == 'av::gua::TriMeshNode':
+                    _child_node.Material.value.set_uniform("enable_color_override", False)
+
+
+        if self.pick_result is not None: # something was hit
+            self.selected_node = self.pick_result.Object.value # get intersected geometry node
+            self.selected_node = self.selected_node.Parent.value # take the parent node of the geomtry node (the whole object)
+
+        else:
+            self.selected_node = None
+
+
+        ## enable node highlighting
+        if self.selected_node is not None:
+            for _child_node in self.selected_node.Children.value:
+                if _child_node.get_type() == 'av::gua::TriMeshNode':
+                    _child_node.Material.value.set_uniform("enable_color_override", True)
+                    _child_node.Material.value.set_uniform("override_color", avango.gua.Vec4(1.0,0.0,0.0,0.3)) # 30% color override
 
     ### callback functions ###
     def evaluate(self): # implement respective base-class function
         if self.enable_flag == False:
             return
 
+        self.hand_geometry.Transform.value = self.pointer_node.Transform.value
+
         ## To-Do: implement Go-Go technique here
-        hand_head_mat = avango.gua.make_inverse_mat(self.HEAD_NODE.WorldTransform.value) * self.pointer_node.WorldTransform.value
-        hand_head_loc = hand_head_mat.get_translate()
-        hand_head_len = hand_head_loc.length()
-        self.hand_geometry.Transform.value = avango.gua.make_trans_mat(0.0, 0.0, 0.0)
-
-        if hand_head_len  >= self.gogo_threshold:
-            hand_head_dir = hand_head_loc/hand_head_len
-            hand_head_delta = hand_head_dir * 1.5 * (hand_head_len-self.gogo_threshold) ** 2
-
-            #TODO: why doesn't it work with hand_head_mat?
-            hand_head_new = avango.gua.make_trans_mat(hand_head_delta[0], hand_head_delta[1], hand_head_delta[2]) #* hand_head_mat
-            hand_world_new = self.pointer_node.WorldTransform.value * hand_head_new
-
-            hand_geo_delta_mat = avango.gua.make_inverse_mat(self.pointer_node.WorldTransform.value) * hand_world_new
-
-            print('hand_head_delta: ',hand_geo_delta_mat.get_translate())
-            
-            self.hand_geometry.Transform.value = hand_geo_delta_mat
+        head_loc    = self.HEAD_NODE.WorldTransform.value.get_translate()
+        pointer_loc = self.pointer_node.WorldTransform.value.get_translate()
+        dif = head_loc - pointer_loc
+        dif.y = 0.0
+        dst = dif.length()
+        #print(dif, dst)
+        if dst  >= self.gogo_threshold:
+            self.hand_geometry.Material.value.set_uniform('Color', avango.gua.Vec4(0.0, 1.0, 0.0, 1.0))
+            #normalize head-to-hand vector            
+            dif = dif / dst
+            dsp_vec = dif * self.gogo_k*(dst-self.gogo_threshold)**2
+            dsp_vec = dsp_vec * (-1.0)
+            #print(dsp_vec)
+            self.hand_geometry.Transform.value = avango.gua.make_trans_mat(dsp_vec[0], 0.0, dsp_vec[2]) * self.hand_geometry.Transform.value
+        else:
+            self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,0.0,1.0))
         
-                ## calc ray intersection
+        ## calc ray intersection
         ManipulationTechnique.update_intersection(self, PICK_MAT = self.hand_geometry.WorldTransform.value, PICK_LENGTH = 1) # call base-class function
 
         ## update object selection
-        ManipulationTechnique.selection(self) # call base-class function
+        self.selection() # call base-class function
 
         # possibly perform object dragging
         ManipulationTechnique.dragging(self) # call base-class function
 
 import time
-from copy import deepcopy
 class VirtualHand(ManipulationTechnique):
 
     ## constructor
@@ -654,6 +703,11 @@ class VirtualHand(ManipulationTechnique):
 
     def enable(self, BOOL):
         ManipulationTechnique.enable(self, BOOL) # call base-class function
+        if self.enable_flag == False:
+            self.hand_geometry.Tags.value = ["invisible"] # set tool invisible
+        else:
+            self.hand_geometry.Tags.value = [] # set tool invisible
+
         self.reset_state()
 
     ### callback functions ###
