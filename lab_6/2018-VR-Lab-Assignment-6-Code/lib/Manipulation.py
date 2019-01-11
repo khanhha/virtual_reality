@@ -520,6 +520,7 @@ class DepthRay(ManipulationTechnique):
         ManipulationTechnique.dragging(self) # call base-class function
 
 import math
+import pickle
 class GoGo(ManipulationTechnique):
 
     ## constructor
@@ -556,6 +557,9 @@ class GoGo(ManipulationTechnique):
         self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,1.0,1.0))
         #self.pointer_node.Children.value.append(self.hand_geometry)
         NAVIGATION_NODE.Children.value.append(self.hand_geometry)
+
+        self.dst_mapping = []
+
         ### set initial states ###
         self.enable(False)
 
@@ -628,13 +632,20 @@ class GoGo(ManipulationTechnique):
             self.hand_geometry.Material.value.set_uniform('Color', avango.gua.Vec4(0.0, 1.0, 0.0, 1.0))
             #normalize head-to-hand vector            
             dif = dif / dst
-            dsp_vec = dif * self.gogo_k*(dst-self.gogo_threshold)**2
+            ext_dst = self.gogo_k*(dst-self.gogo_threshold)**2
+            dsp_vec = dif * ext_dst
             dsp_vec = dsp_vec * (-1.0)
+            new_dst = dst + ext_dst
             #print(dsp_vec)
             self.hand_geometry.Transform.value = avango.gua.make_trans_mat(dsp_vec[0], 0.0, dsp_vec[2]) * self.hand_geometry.Transform.value
         else:
+            new_dst = dst
             self.hand_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,0.0,1.0))
         
+        self.dst_mapping.append((dst, new_dst))
+        with open('./dst_mapping.pkl', 'wb') as file:
+            pickle.dump(file=file, obj = self.dst_mapping)
+
         ## calc ray intersection
         ManipulationTechnique.update_intersection(self, PICK_MAT = self.hand_geometry.WorldTransform.value, PICK_LENGTH = 1) # call base-class function
 
