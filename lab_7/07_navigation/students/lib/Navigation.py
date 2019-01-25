@@ -404,6 +404,10 @@ class TeleportNavigation(NavigationTechnique):
             _new_mat = self.NAVIGATION_MANAGER.get_navigation_matrix() * _input_mat 
             self.NAVIGATION_MANAGER.set_navigation_matrix(_new_mat)
 
+from enum import Enum
+class NavState(Enum):
+    NORMAL = 1
+    HOLD  = 2
 
 class NavidgetNavigation(NavigationTechnique):
 
@@ -411,7 +415,15 @@ class NavidgetNavigation(NavigationTechnique):
 
     ## input fieldsB
     sf_pointer_button = avango.SFBool()
-    
+    key_hold = False
+    sp_center_loc = None
+    sp_surface_loc = None
+    sp_radius = 2.0
+    mf_dof = avango.MFFloat()
+    mf_dof.value = [0.0,0.0,0.0,0.0,0.0,0.0] # init 6 channels
+
+    nav_state = NavState.NORMAL
+
     ### constructor
     def __init__(self):
         NavigationTechnique.__init__(self) # call base class constructor
@@ -421,17 +433,38 @@ class NavidgetNavigation(NavigationTechnique):
 
         ### external references ###
         self.NAVIGATION_MANAGER = NAVIGATION_MANAGER
+        self.SCENEGRAPH = SCENEGRAPH
+        _loader = avango.gua.nodes.TriMeshLoader()
 
+        self.navidget_geometry = _loader.create_geometry_from_file("navidget_geometry", "data/objects/sphere.obj", avango.gua.LoaderFlags.DEFAULTS | avango.gua.LoaderFlags.MAKE_PICKABLE)
+        self.navidget_geometry.Transform.value = avango.gua.make_scale_mat(self.sp_radius,self.sp_radius, self.sp_radius)
+        self.navidget_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(.5,0.5,0.5,.5))
+        self.navidget_geometry.Tags.value = ["invisible"]
+        self.SCENEGRAPH.Root.value.Children.value.append(self.navidget_geometry)
+
+
+        self.orientation_geometry = _loader.create_geometry_from_file("orientation_geometry", "data/objects/sphere.obj", avango.gua.LoaderFlags.DEFAULTS)
+        self.orientation_geometry.Material.value.set_uniform("Color", avango.gua.Vec4(1.0,1.0,0.0,1.0))
+        self.orientation_geometry.Tags.value = ["invisible"]
+        self.SCENEGRAPH.Root.value.Children.value.append(self.orientation_geometry)
 
         ### parameters ###
         self.navidget_duration = 3.0 # in seconds
 
 
+        self.mf_dof.connect_from(self.NAVIGATION_MANAGER.INPUTS.mf_dof_steering)
         self.sf_pointer_button.connect_from(self.NAVIGATION_MANAGER.INPUTS.sf_pointer_button)
 
         self.always_evaluate(True) # change global evaluation policy
 
         
+        ### functions ###
+    def enable(self, BOOL):
+        self.enable_flag = BOOL
+        if self.enable_flag == True:
+            self.navidget_geometry.Tags.value = ['visible']
+        else:
+            self.navidget_geometry.Tags.value = ['invisible']
 
     ### functions ###
     def get_rotation_matrix_between_vectors(self, VEC1, VEC2): # helper function to calculate rotation matrix to rotate one vector (VEC3) on another one (VEC2)
@@ -465,12 +498,69 @@ class NavidgetNavigation(NavigationTechnique):
         
         return _mat
 
-        
-
     ### callback functions ###
     def evaluate(self): # implement respective base-class function
         if self.enable_flag == False:
             return
 
-        ## To-Do: realize Navidget navigation here
+         ## To-Do: realize Teleport navigation here
+        _z = self.mf_dof.value[2]
+        if abs(_z) > 0.1:
+            key_hold = True
+        else:
+            key_hold = False
+
+        if key_hold == False:
+
+            if self.nav_state == NavState.HOLD and self.sp_center_loc is not None and self.sp_surface_loc is not None:
+                _head_mat_world_inv = avango.gua.make_inverse_mat(self.NAVIGATION_MANAGER.VIEWING_SETUP.head_node.WorldTransform.value) 
+                _head_loc = self.NAVIGATION_MANAGER.VIEWING_SETUP.head_node.WorldTransform.value.get_translate()
+                _trans_vec = self.sp_surface_loc - _head_loc
+
+                _head_rot_mat = avango.gua.make_rot_mat(self.NAVIGATION_MANAGER.get_head_matrix().get_rotate())
+                _dir_0 =  avango.gua.Vec3(_head_rot_mat.get_element(0,2), _head_rot_mat.get_element(1,2), _head_rot_mat.get_element(2,2))
+                _dir_0.normalize()
+                _dir_0 *= -1
+
+                _dir_1 = _head_mat_world_inv * (self.sp_center_loc - self.sp_surface_loc)
+                _dir_1 = avango.gua.Vec3(_dir_1.x,  _dir_1.y, _dir_1.z)
+                _dir_1.normalize()
+
+                print("dir_0.dot(dir_1): ", _dir_0.dot(_dir_1))
+
+                _rot_mat = self.get_rotation_matrix_between_vectors(_dir_0, _dir_1)
+
+                #_input_mat = avango.gua.make_trans_mat(_trans_vec) 
+                _input_mat =  _rot_mat
+                _head_rot_mat = avango.gua.make_rot_mat(self.NAVIGATION_MANAGER.get_head_matrix().get_rotate())
+                _input_mat = self.NAVIGATION_MANAGER.transform_mat_in_ref_mat(_input_mat, _head_rot_mat)
+                _new_mat = self.NAVIGATION_MANAGER.get_navigation_matrix() * _input_mat 
+                self.NAVIGATION_MANAGER.set_navigation_matrix(_new_mat)
+
+            self.nav_state = NavState.NORMAL
+
+            self.NAVIGATION_MANAGER.calc_pick_result()
+            self.NAVIGATION_MANAGER.update_ray_visualization()
+            if self.NAVIGATION_MANAGER.pick_result is not None:
+                self.sp_center_loc = self.NAVIGATION_MANAGER.pick_result.WorldPosition.value
+            else:
+                self.sp_center_loc = None
+            self.navidget_geometry.Tags.value = ['invisible']
+
+        elif key_hold == True and self.sp_center_loc is not None:
+            self.nav_state = NavState.HOLD
+
+            self.navidget_geometry.Tags.value = ['visible']
+            self.navidget_geometry.Transform.value = avango.gua.make_trans_mat(self.sp_center_loc) * avango.gua.make_scale_mat(self.sp_radius)
+
+            self.NAVIGATION_MANAGER.calc_pick_result()
+            if  self.NAVIGATION_MANAGER.pick_result is not None:
+                _loc = self.NAVIGATION_MANAGER.pick_result.WorldPosition.value
+                if abs((_loc - self.sp_center_loc).length() - self.sp_radius) < 0.1:
+                    self.sp_surface_loc = _loc
+                    self.orientation_geometry.Tags.value = ['visible']
+                    self.orientation_geometry.Transform.value = avango.gua.make_trans_mat(self.sp_surface_loc) *  avango.gua.make_scale_mat(self.NAVIGATION_MANAGER.intersection_point_size)
+                else:
+                    self.sp_surface_loc = None
+                    self.orientation_geometry.Tags.value = ['invisible']
 
