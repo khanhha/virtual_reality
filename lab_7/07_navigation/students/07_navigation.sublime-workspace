@@ -1,0 +1,1171 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"decorator",
+				"decorator_matrices"
+			],
+			[
+				"enable",
+				"enable_decorators"
+			],
+			[
+				"random",
+				"random_displacement"
+			],
+			[
+				"deco",
+				"decorator_trans_mat"
+			],
+			[
+				"decora",
+				"decorator_output_file"
+			],
+			[
+				"path",
+				"path_width"
+			],
+			[
+				"trans",
+				"trans_mat_b1"
+			],
+			[
+				"translation",
+				"translation_matrix"
+			],
+			[
+				"baselin",
+				"baseline_extension"
+			],
+			[
+				"max",
+				"max_extension"
+			],
+			[
+				"mult",
+				"mult_vec"
+			],
+			[
+				"curr_block",
+				"curr_block_after_ballistic_RT"
+			],
+			[
+				"curr_block_de",
+				"curr_block_deltas_RT"
+			],
+			[
+				"curr_block_after_ball",
+				"curr_block_after_ballistic_RT"
+			],
+			[
+				"compu",
+				"compute_deltas"
+			],
+			[
+				"errors_R_after",
+				"errors_R_after_ballistic_T"
+			],
+			[
+				"ERROR",
+				"ERRORS_AFTER_BALLISTIC"
+			],
+			[
+				"curr_block_after",
+				"curr_block_after_ballistic_R"
+			],
+			[
+				"cur",
+				"curr_block_deltas_R"
+			],
+			[
+				"curr_b",
+				"curr_block_deltas_T"
+			],
+			[
+				"curr",
+				"curr_block_absolutes_array_T"
+			],
+			[
+				"cu",
+				"curr_block_absolutes_array_T"
+			],
+			[
+				"error",
+				"errors_T_after_ballistic_T"
+			],
+			[
+				"previous_write",
+				"previous_write_trial_T"
+			],
+			[
+				"errors_afte",
+				"errors_T_after_ballistic_T"
+			],
+			[
+				"error_decrease",
+				"error_decreases_T_ballistic_to_end"
+			],
+			[
+				"remainen",
+				"remaining_error_R"
+			],
+			[
+				"ballis",
+				"ballistic_state_R"
+			],
+			[
+				"previou",
+				"previous_ballistic_state_R"
+			],
+			[
+				"previ",
+				"previous_write_trial_R"
+			],
+			[
+				"ball",
+				"ballistic_state_R"
+			],
+			[
+				"previous_ba",
+				"previous_ballistic_state_R"
+			],
+			[
+				"war",
+				"warning_format"
+			],
+			[
+				"trial",
+				"trial_within_block_id"
+			],
+			[
+				"file",
+				"file_path"
+			],
+			[
+				"re",
+				"replay_file"
+			],
+			[
+				"task",
+				"task_file"
+			],
+			[
+				"flot",
+				"float_info"
+			],
+			[
+				"err",
+				"error_decreases_ballistic_to_end"
+			],
+			[
+				"errors",
+				"errors_per_trial"
+			],
+			[
+				"erro",
+				"errors_after_ballistic"
+			],
+			[
+				"tri",
+				"trial_id"
+			],
+			[
+				"tria",
+				"trial_id"
+			],
+			[
+				"trial_",
+				"trial_error"
+			],
+			[
+				"mCac",
+				"mCachedStationName"
+			],
+			[
+				"Dev",
+				"DeviceService"
+			],
+			[
+				"REMOTE",
+				"REMOTE_PORT"
+			],
+			[
+				"REMO",
+				"REMOTE_IP"
+			],
+			[
+				"dev",
+				"device_type"
+			],
+			[
+				"Solar",
+				"SolarParameters"
+			],
+			[
+				"current",
+				"current_tip"
+			],
+			[
+				"remove",
+				"remove_child"
+			],
+			[
+				"new",
+				"new_node"
+			],
+			[
+				"getValue",
+				"getValue"
+			],
+			[
+				"get",
+				"get_transform"
+			],
+			[
+				"schedule",
+				"scheduleForEvaluation"
+			],
+			[
+				"refractRa",
+				"refractRayDirection"
+			],
+			[
+				"nor",
+				"normalFlipped"
+			],
+			[
+				"refrac",
+				"refractRayDirection"
+			],
+			[
+				"refra",
+				"refractionIndex"
+			],
+			[
+				"ref",
+				"refractionIndex_"
+			],
+			[
+				"refle",
+				"reflectionColor"
+			],
+			[
+				"mirr",
+				"mirrorRayDirection"
+			],
+			[
+				"mirro",
+				"mirrorRayStart"
+			],
+			[
+				"recu",
+				"recursionDepth_"
+			],
+			[
+				"hit",
+				"hitNormalWorld"
+			],
+			[
+				"hitPO",
+				"hitPositionWorld"
+			],
+			[
+				"in",
+				"intersection"
+			],
+			[
+				"refl",
+				"reflected"
+			],
+			[
+				"po",
+				"position_"
+			],
+			[
+				"a",
+				"accumulatedColor"
+			],
+			[
+				"sha",
+				"shared_ptr"
+			],
+			[
+				"ve",
+				"vec3"
+			],
+			[
+				"dire",
+				"direction_scaled"
+			],
+			[
+				"tra",
+				"transformed_direction"
+			],
+			[
+				"tran",
+				"transformed_direction"
+			],
+			[
+				"homo",
+				"homogeneous_direction"
+			],
+			[
+				"hom",
+				"homogeneous_start"
+			],
+			[
+				"closes",
+				"closest_t"
+			],
+			[
+				"clos",
+				"closest_o"
+			],
+			[
+				"to_star",
+				"to_start_2_error_accumulator"
+			],
+			[
+				"par",
+				"participant_id-1"
+			],
+			[
+				"to_go",
+				"to_goal_1_error_accumulator"
+			],
+			[
+				"to_goa",
+				"to_goal_2_error"
+			],
+			[
+				"to_goal_2_",
+				"to_goal_2_error_accumulator"
+			],
+			[
+				"to_start_2",
+				"to_start_2_error_accumulator"
+			],
+			[
+				"to_st",
+				"to_start_1_error_accumulator"
+			],
+			[
+				"mani",
+				"mani_error_accumulator"
+			],
+			[
+				"simulate",
+				"simulate_triangle_routes"
+			],
+			[
+				"turn",
+				"turn_choice"
+			],
+			[
+				"distan",
+				"distances"
+			],
+			[
+				"route",
+				"route_sum"
+			],
+			[
+				"dit",
+				"distance_per_route"
+			],
+			[
+				"min",
+				"min_value"
+			],
+			[
+				"std",
+				"std_per_route"
+			],
+			[
+				"av",
+				"avg_per_route"
+			],
+			[
+				"tele",
+				"teleports_per_route"
+			],
+			[
+				"quest",
+				"question_mark"
+			],
+			[
+				"spe",
+				"speech_bubble"
+			],
+			[
+				"model_",
+				"model_x"
+			],
+			[
+				"model",
+				"model_x"
+			],
+			[
+				"int",
+				"int_seconds"
+			],
+			[
+				"idl",
+				"idle_time"
+			],
+			[
+				"out",
+				"output_seconds"
+			],
+			[
+				"shor",
+				"shortest_idle_sec"
+			],
+			[
+				"real",
+				"real_name"
+			],
+			[
+				"spli",
+				"splitted_line"
+			],
+			[
+				"line",
+				"lines_output_passwd"
+			],
+			[
+				"spl",
+				"splitted_line"
+			],
+			[
+				"idle",
+				"idle_time_seconds"
+			],
+			[
+				"logg",
+				"logged_users"
+			],
+			[
+				"sp",
+				"splitted_time"
+			],
+			[
+				"id",
+				"idle_time"
+			],
+			[
+				"host",
+				"hostname_user_combinations"
+			],
+			[
+				"ac",
+				"active_users"
+			],
+			[
+				"outp",
+				"output_passwd"
+			],
+			[
+				"ser",
+				"server_address"
+			],
+			[
+				"b_",
+				"b_target"
+			],
+			[
+				"g",
+				"g_target"
+			],
+			[
+				"r",
+				"r_target"
+			],
+			[
+				"key",
+				"keycode"
+			],
+			[
+				"on_position",
+				"on_position_change"
+			],
+			[
+				"WALL_NAV",
+				"WALL_NAV_DIAGRAM_RECT"
+			],
+			[
+				"_nav",
+				"_nav_bottom"
+			],
+			[
+				"_inter",
+				"_interaction_bottom"
+			],
+			[
+				"_pointer",
+				"_pointer_1_user_distance"
+			],
+			[
+				"_as",
+				"_assigned_user_pointer_1"
+			],
+			[
+				"_ya",
+				"_yaw_entry"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main_hmd.py",
+			"settings":
+			{
+				"buffer_size": 1946,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lib/ViveViewingSetup.py",
+			"settings":
+			{
+				"buffer_size": 6482,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "lib/Inputs.py",
+			"settings":
+			{
+				"buffer_size": 7279,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "avango - Clean",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"avango - Clean",
+					""
+				],
+				[
+					"avango - Clean",
+					"Run on A"
+				],
+				[
+					"avango - Clean",
+					"Run on B"
+				]
+			],
+			[
+				"avango - Clean",
+				""
+			]
+		],
+		[
+			[
+				[
+					"avango - Clean",
+					""
+				],
+				[
+					"avango - Clean",
+					"Run on apollo"
+				],
+				[
+					"avango - Clean",
+					"Run on kronos"
+				]
+			],
+			[
+				"avango - Clean",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 341.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/C/Users/Tim/Desktop/07-navigation",
+		"/C/Users/Tim/Desktop/07-navigation/lib"
+	],
+	"file_history":
+	[
+		"/C/Users/Tim/Desktop/07-navigation/lib/ViewingSetup.py",
+		"/C/Users/Tim/Desktop/07-navigation/lib/Scene.py",
+		"/C/Users/Tim/Desktop/2018-VR-Lab-Assignment-6-Code/assignment.sublime-project",
+		"/C/Users/Tim/Desktop/07-navigation/07_navigation.sublime-project",
+		"/C/Users/lopa1693/Desktop/solution/07_navigation.sublime-project",
+		"/mnt/data_internal/vr_exercises/WS_17_18/assignments/07_navigation/solution/start-kronos.bat",
+		"/mnt/data_internal/vr_exercises/WS_17_18/assignments/07_navigation/solution/start-apollo.bat",
+		"/mnt/data_internal/vr_exercises/WS_17_18/assignments/07_navigation/solution/07_navigation.sublime-project",
+		"/home/lopa1693/Desktop/multi-user-hmd/start_client_and_server.bat",
+		"/mnt/data_internal/vr_exercises/WS_17_18/assignments/07_navigation/solution/close_all_windows.bat",
+		"/home/lopa1693/Desktop/multi-user-hmd/server/start_server.bat",
+		"/home/lopa1693/VR/PhD/MeetingNotes.txt",
+		"/home/lopa1693/Desktop/udp/UdpReceiver.py",
+		"/home/lopa1693/Desktop/udp/UdpBroadcaster.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/06-manipulation/tex/main.tex",
+		"/home/lopa1693/Desktop/my_awesome_program.py",
+		"/home/lopa1693/Desktop/mail-an-bernd.txt",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/05-transformations/solution/solution-viewing-setups-and-transformations.txt",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/05-transformations/main.tex",
+		"/home/lopa1693/VR/PhD/concepts-passive-navigation.txt",
+		"/opt/avango/master/avango-daemon/src/avango/daemon/HMDTrack.cpp",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/lib/Manipulation.py",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/README.txt",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/main.py",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/CityGenerator.py",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/transformations.py",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/marker_matrices.csv",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/house_matrices.csv",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/city-generator/decorator_matrices.csv",
+		"/home/lopa1693/master-thesis-study/combined/lib/StudyLogic.py",
+		"/home/lopa1693/gonzo/steering-jumping/index.html",
+		"/home/lopa1693/VR/MasterThesis/master-thesis-study/combined/lib/Utilities.py",
+		"/home/lopa1693/Desktop/rotation.py",
+		"/home/lopa1693/Desktop/CityGenerator/CityGenerator.py",
+		"/home/lopa1693/Desktop/CityGenerator/main.py",
+		"/home/lopa1693/Desktop/CityGenerator/README.txt",
+		"/home/lopa1693/Desktop/CityGenerator/LICENSE.txt",
+		"/home/lopa1693/Desktop/CityGenerator/readme.txt",
+		"/home/lopa1693/Desktop/CityGenerator/house_matrices.csv",
+		"/home/lopa1693/Desktop/CityGenerator/marker_matrices.csv",
+		"/home/lopa1693/master-thesis-study/combined/lib/ViewingSetup.py",
+		"/home/lopa1693/master-thesis-study/combined/lib/navigations/SpaceMouseNavigation.py",
+		"/home/lopa1693/Desktop/CityGenerator/StreetGenerator.py",
+		"/home/lopa1693/Desktop/CityGenerator/hello-street-generator.py",
+		"/home/lopa1693/Desktop/CityGenerator/lib/transformations.py",
+		"/home/lopa1693/Desktop/CityGenerator/asdfStudyLogic.py",
+		"/home/lopa1693/Desktop/CityGenerator/StudyLogic.py",
+		"/home/lopa1693/Desktop/CityGenerator/transformations.py",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/rejected-vr-2018-journal-paper/reviews/vr-2018-reviews.txt",
+		"/home/lopa1693/VR/Papers/vr-2018-steering-jumping/reviews/vr-2018-reviews.txt",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/students/main.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/students/lib/Manipulation.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/main.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/lib/SimpleViewingSetup.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/lib/Scene.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/lib/Navigation.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/lib/Device.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/daemon.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/04-dragging-transfer-functions/solution/start.sh",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/solution/daemon.py",
+		"/home/lopa1693/VR/VR-Exercise/WS16-17/03_crane/lib/Hinge.py",
+		"/home/lopa1693/VR/VR-Exercise/WS16-17/03_crane/lib/Crane.py",
+		"/home/lopa1693/VR/VR-Exercise/WS16-17/03_crane/lib/Arm.py",
+		"/home/lopa1693/VR/VR-Exercise/WS16-17/03_crane/lib/Hook.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/students/lib/OrbitVisualization.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/students/lib/SolarSystem.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/students/lib/SolarParameters.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/students/daemon.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/students/main.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/02-solar-system/students/lib/SolarObject.py",
+		"/home/lopa1693/Desktop/hello-python.py",
+		"/home/lopa1693/VR/Proposals/comuvr/todos-tim.txt",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/01-python-and-scenegraph/solution/part-II-solutions.txt",
+		"/mnt/data_internal/vr_excercises/WS_17_18/assignments/01-python-and-scenegraph/solution/matrices.py",
+		"/home/lopa1693/Desktop/matrices.py",
+		"/home/lopa1693/Desktop/dfg-todos.txt",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/solution/main.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/students/lib/SolarSystem.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/solution/lib/SolarSystem.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/solution/lib/OrbitVisualization.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/solution/lib/SolarParameters.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/solution/lib/SolarObject.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/solution/daemon.py",
+		"/mnt/data_internal/vr_excercises/WS_17_18/solar-system/students/lib/SolarObject.py",
+		"/home/lopa1693/VR/Reviews/GI-VRAR-2017-Paper24.txt",
+		"/home/lopa1693/VR/Reviews/GI-VRAR-2017-Paper12.txt",
+		"/home/lopa1693/Desktop/Fitts3D/SummariesCombinedTask.txt",
+		"/home/lopa1693/Desktop/Fitts3D/SummariesTranslationOnly.txt",
+		"/home/lopa1693/Desktop/parse_errors.py",
+		"/home/lopa1693/Desktop/SummariesTranslationOnly.txt",
+		"/home/lopa1693/Desktop/Fitts3D/user_all.csv",
+		"/home/lopa1693/gonzo/2014-course-virtual-reality/.htaccess",
+		"/home/lopa1693/gonzo/2016-VL-Vis/.htpasswd",
+		"/home/lopa1693/gonzo/.htaccess",
+		"/home/lopa1693/gonzo/backup/.htaccess",
+		"/home/lopa1693/gonzo/steering-jumping/.htaccess",
+		"/home/lopa1693/gonzo/publications/.htaccess",
+		"/home/lopa1693/gonzo/2014-course-virtual-reality/.htpasswd",
+		"/home/lopa1693/gonzo/publications/steering-jumping/index.html",
+		"/home/lopa1693/gonzo/teaching/InfoVisVideos/.htaccess",
+		"/home/lopa1693/Desktop/regression.sh",
+		"/home/lopa1693/Desktop/fit.log",
+		"/home/lopa1693/Desktop/data.txt",
+		"/home/lopa1693/Desktop/guacamole-install-instructions.txt",
+		"/home/lopa1693/VR-Lab-Admin/vrlab-cluster/vrlab-server/vrlab-server.md",
+		"/home/lopa1693/Desktop/git.pub",
+		"/home/lopa1693/Desktop/git-open.pub",
+		"/home/lopa1693/VR/Debugging/simple_example_tracking_override/start.sh",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/include/avango/daemon/DeviceService.h",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/src/avango/daemon/DeviceService.cpp",
+		"/home/lopa1693/VR/Debugging/simple_example_tracking_override/main.py",
+		"/home/lopa1693/VR/Debugging/simple_example_tracking_override/daemon.py",
+		"/home/lopa1693/VR/Debugging/avango/avango-gua/src/avango/gua/scenegraph/Node.cpp",
+		"/home/lopa1693/VR/Debugging/avango/avango-gua/src/avango/gua/scenegraph/TriMeshNode.cpp",
+		"/home/lopa1693/VR/Debugging/avango/avango-gua/include/avango/gua/scenegraph/Node.hpp",
+		"/home/lopa1693/Desktop/DeviceServiceBackup",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/include/avango/daemon/DeviceSensor.h",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/src/avango/daemon/DeviceSensor.cpp",
+		"/home/lopa1693/VR/Papers/VR2017UserStudy/study/avango-applications/recordings/subtask/18_1_1_Thu_Jan_12_17:50:57_2017_subtask.txt",
+		"/mnt/pitoti/multi-context-study/group18/18_1_1_Thu_Jan_12_17:50:57_2017_subtask.txt",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/include/avango/daemon/StationSegment.h",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/src/avango/daemon/StationSegment.cpp",
+		"/home/lopa1693/VR/Debugging/avango/avango-daemon/include/avango/daemon/Config.h",
+		"/home/lopa1693/Desktop/avango-applications/daemon.py",
+		"/home/lopa1693/Desktop/fake-input-devices.py",
+		"/home/lopa1693/Desktop/test.py",
+		"/home/lopa1693/Desktop/eventtest.py",
+		"/home/lopa1693/VR-Lab-Admin/vrlab-cluster/cluster/ltsp-cluster-vrlab.md"
+	],
+	"find":
+	{
+		"height": 41.3333333333
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"frame_callback",
+			"self.decorator_matrices",
+			"PLACE_ASSETS",
+			"turn_mode_index",
+			"decorator",
+			"create_house",
+			"ASSETS",
+			"segment_scale",
+			"rot_mat_180",
+			"manifestation",
+			"max_extension",
+			"FPS",
+			"CityGenerator",
+			"lb2",
+			"behind_start",
+			"self.fix",
+			"fix_extension",
+			"self.extension",
+			"path_width",
+			"manifestation_distance",
+			"goal_proximity_for_answer",
+			"max_segment_extension",
+			"fix_extension",
+			"Loaded route",
+			"create_marker_matrices",
+			"t3d_util",
+			"CityGenerator",
+			"_import_module",
+			"warn=",
+			"warning",
+			"route_markers",
+			"fix_e",
+			"extension_lengths",
+			"self.house_scale_matrix",
+			"self.extent",
+			"uniform_house_scale",
+			"extension_lengths",
+			"get_house_matrix",
+			"turn_mode_index",
+			"fix_extension",
+			"self.max_manifestation_distance",
+			"self.min_manifestation_distance",
+			"max_segment_extension",
+			"motion sic",
+			"dragging",
+			"FPS",
+			" \n",
+			"lediglich",
+			"statistische",
+			"nan",
+			"errors_end_of_trial",
+			"errors_per_trial",
+			"print",
+			"asdf",
+			"mCachedStation",
+			"mCachedStationName",
+			"mCachedStationName =",
+			"std",
+			"clearStationCache",
+			"lookupCached",
+			"Matrix",
+			"Station",
+			"print(",
+			"event_string",
+			"├",
+			"button",
+			"flag",
+			"button",
+			"neptun",
+			"neptune",
+			"OrbitVisualization",
+			"titlesec",
+			"error",
+			"print_graph",
+			"globals",
+			"children_",
+			"clear_children",
+			"parent_ =",
+			"parent_",
+			"add_chil",
+			"add_child",
+			"set_dirty(",
+			"monkey2",
+			"get_parent(",
+			"update_cache",
+			"pop(",
+			"Path",
+			"add_node",
+			"push_back",
+			"remove_child",
+			"add_child",
+			"set_parent(",
+			"parent_",
+			"parent",
+			"set_dirty",
+			"child",
+			"update_cache",
+			"name",
+			"Name",
+			"getName",
+			"DISTRIBUTION",
+			"notifyUpdates",
+			"push",
+			"consumeUpdateMessage",
+			"pushValue",
+			"clear(",
+			"value",
+			"set",
+			"path",
+			"get_path",
+			"path",
+			"Path",
+			"fieldChanged",
+			"name",
+			"getName",
+			"Parent",
+			"av_popMsg",
+			"DISTRIBUTION",
+			"consumeUpdateMessage",
+			"[index]",
+			"group",
+			"transform1",
+			"nettrans",
+			"hitNormal",
+			"hitPoint.normal_",
+			"radius",
+			" \n",
+			";\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"max_additional_extension",
+			"baseline_distance",
+			"max_extension",
+			"t3d",
+			"marker_matrices",
+			"self.house_scale_vector",
+			"self.max_baseline_distance",
+			"self.min_baseline_distance",
+			"0.0",
+			"errors_T_end_of_trial",
+			"errors_end_of_trial",
+			"``",
+			"\\\"",
+			"PhysicalCircle",
+			"ballWasIn",
+			"ball_",
+			"centerLineAt_",
+			"bottomLineAt_",
+			"topLineAt_",
+			"rightLineAt_",
+			"leftLineAt_",
+			"players_",
+			"rightGoalEndLine_",
+			"leftGoalEndLine_",
+			"goalEndHeight_",
+			"goalStartHeight_",
+			"bottomBorderLine_",
+			"topBorderLine_",
+			"temporaryBottomBorder_",
+			"temporaryTopBorder_",
+			"rightBorderLine_",
+			"leftBorderLine_",
+			"screenHeight_",
+			"screenWidth_",
+			"window",
+			"vectorAccessMutex_",
+			"updateDeviceListThread_",
+			"font.ttf",
+			"redBox_",
+			"blueBox_",
+			"font_",
+			"fpsString_",
+			"score_",
+			"scoreLine_",
+			"centerPoint_",
+			"centerCircle_",
+			"goalRight_",
+			"goalLeft_",
+			"field_",
+			"lines_",
+			"pointsRedTeam_",
+			"pointsBlueTeam_",
+			"type",
+			"Event.key.code",
+			"sf::CircleShape",
+			"sf::Keyboard",
+			"glasses",
+			"keyDown1Pressed",
+			"keyUp1Pressed"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main_hmd.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1946,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								850,
+								864
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "lib/ViveViewingSetup.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6482,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2254,
+								2254
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 780.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "lib/Inputs.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7279,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4020,
+								4020
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1308.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 29.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 124.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "avango - Clean",
+	"project": "07_navigation.sublime-project",
+	"replace":
+	{
+		"height": 54.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Scatter",
+				"ScatterPlotRessource"
+			],
+			[
+				"Scatterplot",
+				"ScatterPlotLoader"
+			]
+		],
+		"width": 392.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 378.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
